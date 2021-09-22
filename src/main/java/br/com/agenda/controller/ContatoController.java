@@ -28,7 +28,6 @@ public class ContatoController {
 	@PreAuthorize("isAuthenticated()")
 	@PostMapping
 	public ResponseEntity<?> salvar(@RequestBody ContatoInputDto contatoDto) {
-		System.out.println(contatoDto);
 		Contato contato = contatoService.salvar(contatoDto);
 		return ResponseEntity.ok(contato);
 	}
