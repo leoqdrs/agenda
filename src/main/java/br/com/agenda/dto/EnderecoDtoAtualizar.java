@@ -1,12 +1,12 @@
 package br.com.agenda.dto;
 
-public class EnderecoDtoInput {
+public class EnderecoDtoAtualizar {
 
 	private String rua;
 	private String numero;
 	private String cidade;
 
-	public EnderecoDtoInput(String rua, String numero, String cidade) {
+	public EnderecoDtoAtualizar(String rua, String numero, String cidade) {
 		this.rua = rua;
 		this.numero = numero;
 		this.cidade = cidade;

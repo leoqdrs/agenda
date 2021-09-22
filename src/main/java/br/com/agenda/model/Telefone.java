@@ -52,4 +52,45 @@ public class Telefone {
 		return numero;
 	}
 	
+	public void setContato(Contato contato) {
+		this.contato = contato;		
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((contato == null) ? 0 : contato.hashCode());
+		result = prime * result + ddd;
+		result = prime * result + ((numero == null) ? 0 : numero.hashCode());
+		result = prime * result + ((tipo == null) ? 0 : tipo.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Telefone other = (Telefone) obj;
+		if (contato == null) {
+			if (other.contato != null)
+				return false;
+		} else if (!contato.equals(other.contato))
+			return false;
+		if (ddd != other.ddd)
+			return false;
+		if (numero == null) {
+			if (other.numero != null)
+				return false;
+		} else if (!numero.equals(other.numero))
+			return false;
+		if (tipo != other.tipo)
+			return false;
+		return true;
+	}
+	
 }

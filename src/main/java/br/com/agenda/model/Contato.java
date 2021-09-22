@@ -2,6 +2,8 @@ package br.com.agenda.model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -25,22 +27,22 @@ public class Contato {
 	private String apelido;
 	@JsonManagedReference
     @OneToMany(mappedBy = "contato", cascade = CascadeType.ALL)
-    private List<Telefone> telefone = new ArrayList<>();
+    private List<Telefone> telefones = new ArrayList<>();
 	@JsonManagedReference
     @OneToMany(mappedBy = "contato", cascade = CascadeType.ALL)
-    private List<Endereco> endereco = new ArrayList<>();
+    private List<Endereco> enderecos = new ArrayList<>();
     private String email;
     
 
 
-	public Contato(String nome, String sobrenome, LocalDate dataNascimento, String apelido, List<Telefone> telefone,
-			List<Endereco> endereco, String email) {
+	public Contato(String nome, String sobrenome, LocalDate dataNascimento, String apelido, List<Telefone> telefones,
+			List<Endereco> enderecos, String email) {
 		this.nome = nome;
 		this.sobrenome = sobrenome;
 		this.dataNascimento = dataNascimento;
 		this.apelido = apelido;
-		this.telefone = telefone;
-		this.endereco = endereco;
+		this.telefones = telefones;
+		this.enderecos = enderecos;
 		this.email = email;
 	}
 	
@@ -69,11 +71,11 @@ public class Contato {
 	}
 
 	public List<Telefone> getTelefone() {
-		return telefone;
+		return telefones;
 	}
 
 	public List<Endereco> getEndereco() {
-		return endereco;
+		return enderecos;
 	}
 
 	public String getEmail() {
@@ -103,6 +105,33 @@ public class Contato {
 		} else if (!nome.equals(other.nome))
 			return false;
 		return true;
+	}
+
+	public void setEnderecos(Collection<Endereco> enderecos) {
+		enderecos.forEach(e -> adicionaEndereco(e));
+	}
+
+	public void adicionaEndereco(Endereco endereco) {
+		endereco.setContato(this);
+		this.enderecos.add(endereco);
+	}
+
+	public List<Endereco> getEnderecos() {
+		return Collections.unmodifiableList(enderecos);
+	}
+
+
+	public void setTelefones(Collection<Telefone> telefones) {
+		telefones.forEach(t -> adicionaTelefone(t));
+	}
+
+	public void adicionaTelefone(Telefone telefone) {
+		telefone.setContato(this);
+		this.telefones.add(telefone);
+	}
+
+	public List<Telefone> getTelefones() {
+		return Collections.unmodifiableList(telefones);
 	}
       
 

@@ -5,14 +5,14 @@ import javax.persistence.Enumerated;
 
 import br.com.agenda.model.TipoTelefone;
 
-public class TelefoneDtoInput {
+public class TelefoneDtoAtualizar {
 
 	@Enumerated(EnumType.STRING)
 	private TipoTelefone tipo;
 	private int ddd;
 	private String numero;
 	
-	public TelefoneDtoInput(TipoTelefone tipo, int ddd, String numero) {
+	public TelefoneDtoAtualizar(TipoTelefone tipo, int ddd, String numero) {
 		this.tipo = tipo;
 		this.ddd = ddd;
 		this.numero = numero;

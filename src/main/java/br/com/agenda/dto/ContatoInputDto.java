@@ -13,18 +13,18 @@ public class ContatoInputDto {
 	private String sobrenome;
 	private LocalDate dataNascimento;
 	private String apelido;
-	private TelefoneDtoInput telefone;
-	private EnderecoDtoInput endereco;
+	private List<Telefone> telefones = new ArrayList<>();
+	private List<Endereco> enderecos = new ArrayList<>();
     private String email;
     
 	public ContatoInputDto(String nome, String sobrenome, LocalDate dataNascimento, String apelido,
-			TelefoneDtoInput telefone, EnderecoDtoInput endereco, String email) {
+			List<Telefone> telefones, List<Endereco> enderecos, String email) {
 		this.nome = nome;
 		this.sobrenome = sobrenome;
 		this.dataNascimento = dataNascimento;
 		this.apelido = apelido;
-		this.telefone = telefone;
-		this.endereco = endereco;
+		this.telefones = telefones;
+		this.enderecos = enderecos;
 		this.email = email;
 	}
 
@@ -44,12 +44,12 @@ public class ContatoInputDto {
 		return apelido;
 	}
 
-	public TelefoneDtoInput getTelefone() {
-		return telefone;
+	public List<Telefone> getTelefone() {
+		return telefones;
 	}
 
-	public EnderecoDtoInput getEndereco() {
-		return endereco;
+	public List<Endereco> getEndereco() {
+		return enderecos;
 	}
 
 	public String getEmail() {
@@ -57,9 +57,10 @@ public class ContatoInputDto {
 	}
 	
 	public Contato getContato() {
-		Telefone telefone = new Telefone(this.telefone.getTipo(), this.telefone.getDdd(), this.telefone.getNumero());
-		Endereco endereco = new Endereco(this.endereco.getRua(), this.endereco.getNumero(), this.endereco.getCidade());
-		return new Contato(nome, sobrenome, dataNascimento, apelido, telefone, endereco, email);
+		Contato contato = new Contato(nome, sobrenome, dataNascimento, apelido, telefones, enderecos, email);
+		enderecos.forEach(e -> contato.adicionaEndereco(e));
+		telefones.forEach(t -> contato.adicionaTelefone(t));
+		return contato;
 	}	
 	
 }

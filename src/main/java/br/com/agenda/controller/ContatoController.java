@@ -33,11 +33,11 @@ public class ContatoController {
 		return ResponseEntity.ok(contato);
 	}
 	
-	@GetMapping("/consultas/{id}")
-	public ResponseEntity<?> consultas(@PathVariable Integer id){
+	@GetMapping("/contatos/{id}")
+	public ResponseEntity<?> contatos(@PathVariable Integer id){
 		
-		Contato consultas =  contatoService.buscarPorId(id);
-		return ResponseEntity.ok(consultas);
+		Contato contatos =  contatoService.buscarPorId(id);
+		return ResponseEntity.ok(contatos);
 	}
 	
 	@GetMapping
