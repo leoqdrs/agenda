@@ -2,58 +2,81 @@ package br.com.agenda.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import br.com.agenda.repository.UsuarioRepository;
 import br.com.agenda.service.TokenService;
 
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+@Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-	@Autowired
-	AutenticacaoService userDetailService;
-	@Autowired
-	TokenService tokenService;
-	
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		/*auth.inMemoryAuthentication().passwordEncoder(NoOpPasswordEncoder.getInstance()).withUser("admin")
-				.password("1234").roles("USER");*/
-		auth.userDetailsService(userDetailService).passwordEncoder(encoder());
-	}
+    private static final String[] AUTH_WHITELIST = {
+            "/swagger-resources/**",
+            "/swagger-ui.html",
+            "/v2/api-docs",
+            "/webjars/**"
+    };
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http.headers().frameOptions().disable().and().
-		authorizeRequests().
-		antMatchers(HttpMethod.GET,"/clientes/*","/usuarios/*").
-		permitAll().
-		antMatchers("/h2-console/**").
-		permitAll().
-		antMatchers(HttpMethod.POST,"/auth/**").
-		permitAll().
-		anyRequest().
-		authenticated().and().csrf().disable().
-		sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().
-		addFilterBefore(new JwtTokenFilter(tokenService,userDetailService),
-				UsernamePasswordAuthenticationFilter.class);
-	}
-	
-	@Bean
-	@Override
-	protected AuthenticationManager authenticationManager() throws Exception {
-		return super.authenticationManager();
-	}
-	
-	@Bean
-	public BCryptPasswordEncoder encoder() {
-		return new BCryptPasswordEncoder();
-	}
+
+    @Autowired
+    AutenticacaoService autenticacaoService;
+
+    @Autowired
+    TokenService tokenService;
+
+    @Autowired
+    UsuarioRepository usuarioRepository;
+
+    @Override
+    public void configure(AuthenticationManagerBuilder auth) throws Exception{
+        auth.userDetailsService(autenticacaoService).passwordEncoder(encoder());
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers(AUTH_WHITELIST);
+    }
+
+    @Override
+    public void configure(HttpSecurity httpSecurity) throws Exception{
+        httpSecurity.
+//                authorizeRequests().
+                authorizeRequests().
+                antMatchers(AUTH_WHITELIST).permitAll().
+                antMatchers(HttpMethod.GET,"/contatos/**","/usuarios/*","/swagger-ui/**").
+                permitAll().
+                antMatchers(HttpMethod.POST,"/auth/","/contatos/**","/usuarios/**","/swagger-ui/**").
+                permitAll().
+                anyRequest().
+                authenticated().and().csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().addFilterBefore(new JwtTokenFilter(tokenService,usuarioRepository), UsernamePasswordAuthenticationFilter.class)
+                ;
+          }
+
+
+    @Bean
+    public BCryptPasswordEncoder encoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+
+    }
+    
 }

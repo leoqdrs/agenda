@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import br.com.agenda.model.Usuario;
+import br.com.agenda.repository.UsuarioRepository;
 import br.com.agenda.service.TokenService;
 
 public class JwtTokenFilter extends OncePerRequestFilter {
@@ -19,7 +20,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 	private TokenService tokenService;
 	private AutenticacaoService autenticacaoService;
 	
-	public JwtTokenFilter(TokenService tokenService, AutenticacaoService autenticacaoService) {
+	public JwtTokenFilter(TokenService tokenService, UsuarioRepository usuarioRepository) {
 		this.tokenService = tokenService;
 	}
 

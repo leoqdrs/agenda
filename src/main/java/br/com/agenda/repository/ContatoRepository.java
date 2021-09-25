@@ -9,4 +9,5 @@ import br.com.agenda.model.Contato;
 @Repository
 public interface ContatoRepository extends JpaRepository<Contato, Integer> , JpaSpecificationExecutor<Contato> {
 
+
 }

@@ -13,8 +13,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 @Entity
 public class Contato {
 	
@@ -25,29 +23,27 @@ public class Contato {
 	private String sobrenome;
 	private LocalDate dataNascimento;
 	private String apelido;
-	@JsonManagedReference
-    @OneToMany(mappedBy = "contato", cascade = CascadeType.ALL)
+
+	@OneToMany(mappedBy = "contato", cascade = CascadeType.ALL)
     private List<Telefone> telefones = new ArrayList<>();
-	@JsonManagedReference
-    @OneToMany(mappedBy = "contato", cascade = CascadeType.ALL)
+
+	@OneToMany(mappedBy = "contato", cascade = CascadeType.ALL)
     private List<Endereco> enderecos = new ArrayList<>();
-    private String email;
+
+	@OneToMany(mappedBy = "contato", cascade = CascadeType.ALL)
+    private List<Email> emails = new ArrayList<>();
     
 
 
-	public Contato(String nome, String sobrenome, LocalDate dataNascimento, String apelido, List<Telefone> telefones,
-			List<Endereco> enderecos, String email) {
+	public Contato(String nome, String sobrenome, LocalDate dataNascimento, String apelido) {
 		this.nome = nome;
 		this.sobrenome = sobrenome;
 		this.dataNascimento = dataNascimento;
 		this.apelido = apelido;
-		this.telefones = telefones;
-		this.enderecos = enderecos;
-		this.email = email;
 	}
 	
 	public Contato() {
-		// TODO Auto-generated constructor stub
+		
 	}
 	
 	public Integer getId() {
@@ -70,16 +66,47 @@ public class Contato {
 		return apelido;
 	}
 
-	public List<Telefone> getTelefone() {
-		return telefones;
+	public void setEnderecos(Collection<Endereco> enderecos) {
+		enderecos.forEach(e -> adicionaEndereco(e));
 	}
 
-	public List<Endereco> getEndereco() {
-		return enderecos;
+	public Endereco adicionaEndereco(Endereco endereco) {
+		endereco.setContato(this);
+		this.enderecos.add(endereco);
+		return endereco;
 	}
 
-	public String getEmail() {
+	public List<Endereco> getEnderecos() {
+		return Collections.unmodifiableList(enderecos);
+	}
+
+
+	public void setTelefones(Collection<Telefone> telefones) {
+		telefones.forEach(t -> adicionaTelefone(t));
+	}
+
+	public Telefone adicionaTelefone(Telefone telefone) {
+		telefone.setContato(this);
+		this.telefones.add(telefone);
+		return telefone;
+	}
+
+	public List<Telefone> getTelefones() {
+		return Collections.unmodifiableList(telefones);
+	}
+    
+	public void setEmails(Collection<Email> emails) {
+		emails.forEach(m -> adicionaEmail(m));
+	}
+
+	public Email adicionaEmail(Email email) {
+		email.setContato(this);
+		this.emails.add(email);
 		return email;
+	}
+
+	public List<Email> getEmails() {
+		return Collections.unmodifiableList(emails);
 	}
 
 	@Override
@@ -87,6 +114,7 @@ public class Contato {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
+		result = prime * result + ((sobrenome == null) ? 0 : sobrenome.hashCode());
 		return result;
 	}
 
@@ -104,35 +132,13 @@ public class Contato {
 				return false;
 		} else if (!nome.equals(other.nome))
 			return false;
+		if (sobrenome == null) {
+			if (other.sobrenome != null)
+				return false;
+		} else if (!sobrenome.equals(other.sobrenome))
+			return false;
 		return true;
 	}
-
-	public void setEnderecos(Collection<Endereco> enderecos) {
-		enderecos.forEach(e -> adicionaEndereco(e));
-	}
-
-	public void adicionaEndereco(Endereco endereco) {
-		endereco.setContato(this);
-		this.enderecos.add(endereco);
-	}
-
-	public List<Endereco> getEnderecos() {
-		return Collections.unmodifiableList(enderecos);
-	}
-
-
-	public void setTelefones(Collection<Telefone> telefones) {
-		telefones.forEach(t -> adicionaTelefone(t));
-	}
-
-	public void adicionaTelefone(Telefone telefone) {
-		telefone.setContato(this);
-		this.telefones.add(telefone);
-	}
-
-	public List<Telefone> getTelefones() {
-		return Collections.unmodifiableList(telefones);
-	}
-      
+	
 
 }

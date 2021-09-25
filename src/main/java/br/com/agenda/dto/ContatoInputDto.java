@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.agenda.model.Contato;
+import br.com.agenda.model.Email;
 import br.com.agenda.model.Endereco;
 import br.com.agenda.model.Telefone;
 
@@ -15,17 +16,17 @@ public class ContatoInputDto {
 	private String apelido;
 	private List<Telefone> telefones = new ArrayList<>();
 	private List<Endereco> enderecos = new ArrayList<>();
-    private String email;
+    private List<Email> emails = new ArrayList<>();
     
 	public ContatoInputDto(String nome, String sobrenome, LocalDate dataNascimento, String apelido,
-			List<Telefone> telefones, List<Endereco> enderecos, String email) {
+			List<Telefone> telefones, List<Endereco> enderecos, List<Email> emails) {
 		this.nome = nome;
 		this.sobrenome = sobrenome;
 		this.dataNascimento = dataNascimento;
 		this.apelido = apelido;
 		this.telefones = telefones;
 		this.enderecos = enderecos;
-		this.email = email;
+		this.emails = emails;
 	}
 
 	public String getNome() {
@@ -52,15 +53,12 @@ public class ContatoInputDto {
 		return enderecos;
 	}
 
-	public String getEmail() {
-		return email;
+	public List<Email> getEmail() {
+		return emails;
 	}
 	
 	public Contato getContato() {
-		Contato contato = new Contato(nome, sobrenome, dataNascimento, apelido, telefones, enderecos, email);
-		enderecos.forEach(e -> contato.adicionaEndereco(e));
-		telefones.forEach(t -> contato.adicionaTelefone(t));
+		Contato contato = new Contato(nome, sobrenome, dataNascimento, apelido);
 		return contato;
 	}	
-	
 }
