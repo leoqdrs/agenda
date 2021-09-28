@@ -23,6 +23,7 @@ public class Contato {
 	private String sobrenome;
 	private LocalDate dataNascimento;
 	private String apelido;
+	private String foto;
 
 	@OneToMany(mappedBy = "contato", cascade = CascadeType.ALL)
     private List<Telefone> telefones = new ArrayList<>();
@@ -71,7 +72,6 @@ public class Contato {
 	}
 
 	public Endereco adicionaEndereco(Endereco endereco) {
-		endereco.setContato(this);
 		this.enderecos.add(endereco);
 		return endereco;
 	}
@@ -86,7 +86,6 @@ public class Contato {
 	}
 
 	public Telefone adicionaTelefone(Telefone telefone) {
-		telefone.setContato(this);
 		this.telefones.add(telefone);
 		return telefone;
 	}
@@ -100,7 +99,6 @@ public class Contato {
 	}
 
 	public Email adicionaEmail(Email email) {
-		email.setContato(this);
 		this.emails.add(email);
 		return email;
 	}
@@ -140,5 +138,12 @@ public class Contato {
 		return true;
 	}
 	
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
+    }	
 
 }

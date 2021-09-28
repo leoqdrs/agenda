@@ -27,7 +27,6 @@ public class ContatoService {
 	public Contato salvar(ContatoInputDto contatoDto) {
 		Contato contato = contatoDto.getContato();
 		return contatoRepository.save(contato);
-
 	}
 
 	public Contato buscarPorId(Integer contatoId) {
@@ -42,26 +41,32 @@ public class ContatoService {
     public Contato adicionaTelefoneContato(Integer id, Telefone telefone) {
         Contato contato = contatoRepository.getById(id);
         telefone.setContato(contato);
-        Telefone telefone1 = contato.adicionaTelefone(telefone);
-
+        contato.adicionaTelefone(telefone);
         return contatoRepository.save(contato);
     }
 
     public Contato adicionaEnderecoContato(Integer id, Endereco endereco) {
         Contato contato = contatoRepository.getById(id);
         endereco.setContato(contato);
-        Endereco endereco1 = contato.adicionaEndereco(endereco);
-
+        contato.adicionaEndereco(endereco);
         return contatoRepository.save(contato);
     }
 
     public Contato adicionaEmailContato(Integer id, Email email) {
         Contato contato = contatoRepository.getById(id);
         email.setContato(contato);
-        Email email1 = contato.adicionaEmail(email);
-
+        contato.adicionaEmail(email);
         return contatoRepository.save(contato);
     }
 	
+    public Contato salvarFoto(Integer id, String foto) {
+        Contato contato = contatoRepository.getById(id);
+        contato.setFoto(foto);
+        return contatoRepository.save(contato);
+    }
+    
+    public void deletaContato(Integer id) {
+        contatoRepository.delete(contatoRepository.getById(id));
+    }
 	
 }
