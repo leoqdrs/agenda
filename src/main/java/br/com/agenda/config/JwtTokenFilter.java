@@ -18,10 +18,12 @@ import br.com.agenda.service.TokenService;
 public class JwtTokenFilter extends OncePerRequestFilter {
 	
 	private TokenService tokenService;
-	private AutenticacaoService autenticacaoService;
+	//private AutenticacaoService autenticacaoService;
+	private UsuarioRepository usuarioRepository;
 	
 	public JwtTokenFilter(TokenService tokenService, UsuarioRepository usuarioRepository) {
 		this.tokenService = tokenService;
+		this.usuarioRepository = usuarioRepository;
 	}
 
 	@Override
@@ -37,7 +39,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
 	private void autenticaUsuario(String token) {
 		Integer idUsuario = tokenService.getUsuarioId(token);
-		Usuario usuario = autenticacaoService.buscarPorId(idUsuario);
+		Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow();
 		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(usuario,null,usuario.getAuthorities());
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		
@@ -45,9 +47,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
 	private String getToken(HttpServletRequest request) {
 		String token = request.getHeader("Authorization");
-		if(token==null|| token.isEmpty() || token.startsWith("Bearer ")) {
+		if(token==null|| token.isEmpty() || !token.startsWith("Bearer ")) {
 			return null;
 		}
+		System.out.println(token);
 		return token.substring(7);
     }
 

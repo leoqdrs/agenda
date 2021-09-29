@@ -54,15 +54,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity httpSecurity) throws Exception{
         httpSecurity.
-//                authorizeRequests().
                 authorizeRequests().
                 antMatchers(AUTH_WHITELIST).permitAll().
-                antMatchers(HttpMethod.GET,"/contatos/**","/usuarios/*","/swagger-ui/**").
+                antMatchers(HttpMethod.GET,"/contatos/**","/usuarios/**","/swagger-ui/**").
                 permitAll().
                 antMatchers(HttpMethod.POST,"/auth/","/contatos/**","/usuarios/**","/swagger-ui/**").
                 permitAll().
+                antMatchers("/h2-console/**").
+                permitAll().
                 anyRequest().
-                authenticated().and().csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().addFilterBefore(new JwtTokenFilter(tokenService,usuarioRepository), UsernamePasswordAuthenticationFilter.class)
+                authenticated().and().csrf().disable().
+                sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().headers().frameOptions().sameOrigin().and().
+                addFilterBefore(new JwtTokenFilter(tokenService,usuarioRepository),
+        				UsernamePasswordAuthenticationFilter.class);
                 ;
           }
 

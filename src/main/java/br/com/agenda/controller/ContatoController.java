@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,23 +35,27 @@ public class ContatoController {
 		this.contatoService = contatoservice;
 	}
 	
+	@PreAuthorize("hasRole('ROLE_ADM')")
 	@PostMapping("/salvar")
 	public ResponseEntity<?> salvar(@RequestBody ContatoInputDto contatoDto) {
 		Contato contato = contatoService.salvar(contatoDto);
 		return ResponseEntity.ok(contato);
 	}
 	
+	@PreAuthorize("hasRole('ROLE_ADM') or hasRole('ROLE_USUARIO')")
 	@GetMapping("/{id}")
 	public ResponseEntity<?> contatos(@PathVariable Integer id){
 		Contato contatos =  contatoService.buscarPorId(id);
 		return ResponseEntity.ok(contatos);
 	}
 	
+	@PreAuthorize("hasRole('ROLE_ADM') or hasRole('ROLE_USUARIO')")
 	@GetMapping
 	public List<Contato> buscarContatos(){
 		return contatoService.buscarContatos();
 	} 
 	
+	@PreAuthorize("hasRole('ROLE_ADM')")
 	@PostMapping("salvar/{id}/telefone")
     public ResponseEntity<?> adicionaTelefone(
             @PathVariable Integer id,
@@ -58,13 +63,15 @@ public class ContatoController {
     	return  ResponseEntity.ok().body(contatoService.adicionaTelefoneContato(id,telefone));
     }
 
-    @PostMapping("salvar/{id}/endereco")
+	@PreAuthorize("hasRole('ROLE_ADM')")
+	@PostMapping("salvar/{id}/endereco")
     public ResponseEntity<?> adicionaEndereco(
             @PathVariable Integer id,
             @RequestBody Endereco endereco){
     	return  ResponseEntity.ok().body(contatoService.adicionaEnderecoContato(id,endereco));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADM')")
     @PostMapping("salvar/{id}/email")
     public ResponseEntity<?> adicionaTelefone(
             @PathVariable Integer id,
@@ -72,6 +79,7 @@ public class ContatoController {
     	return  ResponseEntity.ok().body(contatoService.adicionaEmailContato(id,email));
     }
     
+    @PreAuthorize("hasRole('ROLE_ADM')")
     @PutMapping("salvar/{id}/foto")
     public ResponseEntity<?> uploadPhoto(
             @PathVariable Integer id,
