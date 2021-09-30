@@ -1,5 +1,6 @@
 package br.com.agenda.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
@@ -68,5 +69,9 @@ public class ContatoService {
     public void deletaContato(Integer id) {
         contatoRepository.delete(contatoRepository.getById(id));
     }
+
+	public List<Contato> searchByContato(String nome, String sobrenome, LocalDate dataNascimento) {
+		return contatoRepository.searchByContato(nome, sobrenome, dataNascimento);
+	}
 	
 }

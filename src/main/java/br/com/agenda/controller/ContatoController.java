@@ -38,6 +38,11 @@ public class ContatoController {
 	@PreAuthorize("hasRole('ROLE_ADM')")
 	@PostMapping("/salvar")
 	public ResponseEntity<?> salvar(@RequestBody ContatoInputDto contatoDto) {
+		List<Contato> contatos = contatoService.searchByContato(contatoDto.getNome(), contatoDto.getSobrenome(), 
+				contatoDto.getDataNascimento());
+			if (!contatos.isEmpty()) {
+				return ResponseEntity.badRequest().body("Contato já existe.");
+			}		
 		Contato contato = contatoService.salvar(contatoDto);
 		return ResponseEntity.ok(contato);
 	}
